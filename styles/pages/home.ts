@@ -9,10 +9,9 @@ export const HomeContainer = styled('main', {
   paddingBottom: '2rem',
 })
 
-export const Product = styled('div', {
+export const ProductContent = styled('div', {
   background: 'linear-gradient(180deg, #1ea483  0%, #7465d4 100%)',
   borderRadius: 8,
-  cursor: 'pointer',
   position: 'relative',
   overflow: 'hidden',
 
@@ -24,40 +23,66 @@ export const Product = styled('div', {
     objectFit: 'cover',
   },
 
-  footer: {
-    position: 'absolute',
-    bottom: '0.25rem',
-    left: '0.25rem',
-    right: '0.25rem',
-    borderRadius: 6,
-    padding: '2rem',
+  '&:hover': {
+    footer: {
+      transform: 'translateY(0%)',
+      opacity: 1,
+    },
+  },
+})
 
+export const Footer = styled('footer', {
+  position: 'absolute',
+  bottom: '0.25rem',
+  left: '0.25rem',
+  right: '0.25rem',
+  borderRadius: 6,
+  padding: '2rem',
+
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+
+  backgroundColor: 'rgba(0,0,0,0.6)',
+
+  transform: 'translateY(110%)',
+  opacity: 0,
+  transition: 'all 0.15s ease-in-out',
+
+  '&>div': {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-
-    backgroundColor: 'rgba(0,0,0,0.6)',
-
-    transform: 'translateY(110%)',
-    opacity: 0,
-    transition: 'all 0.15s ease-in-out',
+    flexDirection: 'column',
+    gap: '0.25rem',
 
     strong: {
-      fontSize: '$lg',
+      fontSize: '$md',
       color: '$gray100',
+      lineHeight: 1.6,
     },
 
     span: {
       fontSize: '$xl',
       fontWeight: 'bold',
       color: '$green300',
+      lineHeight: 1.4,
     },
   },
 
-  '&:hover': {
-    footer: {
-      transform: 'translateY(0%)',
-      opacity: 1,
+  a: {
+    color: '$white',
+    width: '3.5rem',
+    height: '3.5rem',
+    backgroundColor: '$green500',
+    borderRadius: 6,
+
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    transition: 'all 0.15s ease',
+
+    '&:hover': {
+      backgroundColor: '$green300',
     },
   },
 })

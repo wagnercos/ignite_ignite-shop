@@ -4,23 +4,76 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import Stripe from 'stripe'
+import { Handbag } from '@phosphor-icons/react'
+import { useShoppingCart } from 'use-shopping-cart'
+import {
+  CartActions,
+  CartDetails,
+  formatCurrencyString,
+  Product,
+} from 'use-shopping-cart/core'
 
 import { stripe } from '../services/stripe'
 
-import 'keen-slider/keen-slider.min.css'
-import { HomeContainer, Product } from '../../styles/pages/home'
+import { Footer, HomeContainer, ProductContent } from '../../styles/pages/home'
 import { imageBlured } from '../util/blurDataUrl'
 
+import 'keen-slider/keen-slider.min.css'
+
 interface HomeProps {
-  products: {
-    id: string
-    name: string
-    imageUrl: string
-    price: string
-  }[]
+  products: Product[]
+}
+
+function ProductListing({
+  product,
+  addItem,
+  cartDetails,
+}: {
+  product: Product
+  addItem: CartActions['addItem']
+  cartDetails: CartDetails
+}) {
+  const price = formatCurrencyString({
+    value: product.price,
+    currency: 'BRL',
+    language: 'pt-BR',
+  })
+
+  const isInCart = product.id in cartDetails
+
+  console.log(product)
+
+  return (
+    <ProductContent className="keen-slider__slide" key={product.id}>
+      <Image
+        src={product.imageUrl}
+        alt=""
+        width={520}
+        height={480}
+        placeholder="blur"
+        blurDataURL={imageBlured}
+      />
+
+      <Footer>
+        <div>
+          <strong>{product.name}</strong>
+          <span>{price}</span>
+        </div>
+        <Link
+          href={`/product/${product.id}`}
+          prefetch={false}
+          onClick={!isInCart ? () => addItem(product) : () => {}}
+        >
+          <Handbag size={32} />
+        </Link>
+      </Footer>
+    </ProductContent>
+  )
 }
 
 export default function Home({ products }: HomeProps) {
+  const { addItem, cartDetails } = useShoppingCart()
+
   const [sliderRef] = useKeenSlider({
     slides: {
       perView: 3,
@@ -37,27 +90,12 @@ export default function Home({ products }: HomeProps) {
       <HomeContainer ref={sliderRef} className="keen-slider">
         {products.map((product) => {
           return (
-            <Link
+            <ProductListing
               key={product.id}
-              href={`/product/${product.id}`}
-              prefetch={false}
-            >
-              <Product className="keen-slider__slide">
-                <Image
-                  src={product.imageUrl}
-                  alt=""
-                  width={520}
-                  height={480}
-                  placeholder="blur"
-                  blurDataURL={imageBlured}
-                />
-
-                <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
-                </footer>
-              </Product>
-            </Link>
+              product={product}
+              addItem={addItem}
+              cartDetails={cartDetails}
+            />
           )
         })}
       </HomeContainer>
@@ -65,10 +103,6 @@ export default function Home({ products }: HomeProps) {
   )
 }
 
-// Utilizado somente com informações que são cruciais em tela para indexadores, bots etc...
-// Obter propriedades do Server Side (SSR)
-// Lembrando que estes dados rodam dentro do node server
-// revalidate = propriedade que atualiza minha página estática (SSG)
 export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
     expand: ['data.default_price'],
@@ -81,10 +115,8 @@ export const getStaticProps: GetStaticProps = async () => {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-      }).format(price.unit_amount / 100),
+      price: price.unit_amount,
+      defaultPriceId: price.id,
     }
   })
 

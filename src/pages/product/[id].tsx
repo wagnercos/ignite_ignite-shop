@@ -2,6 +2,8 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import Image from 'next/image'
 import Stripe from 'stripe'
 import axios from 'axios'
+import { useState } from 'react'
+import Head from 'next/head'
 
 import { stripe } from '../../services/stripe'
 
@@ -12,8 +14,6 @@ import {
 } from '../../../styles/pages/product'
 
 import { imageBlured } from '../../util/blurDataUrl'
-import { useState } from 'react'
-import Head from 'next/head'
 
 interface ProductProps {
   product: {
