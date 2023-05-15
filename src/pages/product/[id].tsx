@@ -19,10 +19,10 @@ interface ProductProps {
   product: {
     id: string
     name: string
-    imageUrl: string
+    image: string
     price: string
     description: string
-    defaultPriceId: string
+    price_id: string
   }
 }
 
@@ -34,7 +34,7 @@ export default function Product({ product }: ProductProps) {
     try {
       setIsCreatingCheckoutSession(true)
       const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId,
+        priceId: product.price_id,
       })
 
       const { checkoutUrl } = response.data
@@ -55,7 +55,7 @@ export default function Product({ product }: ProductProps) {
       <ProductContainer>
         <ImageContainer>
           <Image
-            src={product.imageUrl}
+            src={product.image}
             alt=""
             width={520}
             height={480}
@@ -105,13 +105,13 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
       product: {
         id: product.id,
         name: product.name,
-        imageUrl: product.images[0],
+        image: product.images[0],
         price: new Intl.NumberFormat('pt-BR', {
           style: 'currency',
           currency: 'BRL',
         }).format(price.unit_amount / 100),
         description: product.description,
-        defaultPriceId: price.id,
+        price_id: price.id,
       },
     },
     revalidate: 60 * 60 * 1,

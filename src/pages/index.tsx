@@ -7,7 +7,6 @@ import Stripe from 'stripe'
 import { Handbag } from '@phosphor-icons/react'
 import { useShoppingCart } from 'use-shopping-cart'
 import {
-  CartActions,
   CartDetails,
   formatCurrencyString,
   Product,
@@ -20,8 +19,18 @@ import { imageBlured } from '../util/blurDataUrl'
 
 import 'keen-slider/keen-slider.min.css'
 
+interface ProductProps {
+  id: string
+  name: string
+  image: string
+  price: number
+  price_id: string
+}
+
+export type CombinedProductTypes = ProductProps & Product
+
 interface HomeProps {
-  products: Product[]
+  products: CombinedProductTypes[]
 }
 
 function ProductListing({
@@ -29,8 +38,8 @@ function ProductListing({
   addItem,
   cartDetails,
 }: {
-  product: Product
-  addItem: CartActions['addItem']
+  product: ProductProps
+  addItem: (product: CombinedProductTypes, options?: any) => void
   cartDetails: CartDetails
 }) {
   const price = formatCurrencyString({
@@ -41,12 +50,10 @@ function ProductListing({
 
   const isInCart = product.id in cartDetails
 
-  console.log(product)
-
   return (
     <ProductContent className="keen-slider__slide" key={product.id}>
       <Image
-        src={product.imageUrl}
+        src={product.image}
         alt=""
         width={520}
         height={480}
@@ -62,7 +69,22 @@ function ProductListing({
         <Link
           href={`/product/${product.id}`}
           prefetch={false}
-          onClick={!isInCart ? () => addItem(product) : () => {}}
+          onClick={
+            !isInCart
+              ? () =>
+                  addItem(
+                    {
+                      name: product.name,
+                      id: product.id,
+                      image: product.image,
+                      price: product.price,
+                      price_id: product.price_id,
+                      currency: 'BRL',
+                    },
+                    { count: 1 },
+                  )
+              : () => {}
+          }
         >
           <Handbag size={32} />
         </Link>
@@ -114,9 +136,9 @@ export const getStaticProps: GetStaticProps = async () => {
     return {
       id: product.id,
       name: product.name,
-      imageUrl: product.images[0],
+      image: product.images[0],
       price: price.unit_amount,
-      defaultPriceId: price.id,
+      price_id: price.id,
     }
   })
 

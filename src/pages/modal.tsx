@@ -35,13 +35,10 @@ export function Modal() {
   async function handleBuyProduct() {
     try {
       setIsCreatingCheckoutSession(true)
-      const priceId = products.map((p) => ({
-        priceId: p.entry.price_data,
-      }))
 
-      console.log(priceId)
-
-      const response = await axios.post('/api/checkout', { priceId })
+      const response = await axios.post('/api/checkout', {
+        cartItem: products,
+      })
 
       const { checkoutUrl } = response.data
 
@@ -68,7 +65,7 @@ export function Modal() {
               <CartItem key={product.entry.id}>
                 <ImageContainer>
                   <Image
-                    src={product.entry.imageUrl}
+                    src={product.entry.image}
                     alt=""
                     width={90}
                     height={90}
