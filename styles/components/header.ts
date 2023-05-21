@@ -41,10 +41,18 @@ export const QuantityMarker = styled('span', {
   backgroundColor: '$green500',
   border: '2px solid $gray900',
 
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  display: 'none',
 
   fontSize: '0.875rem',
   fontWeight: 'bold',
+
+  variants: {
+    cartExist: {
+      true: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    },
+  },
 })

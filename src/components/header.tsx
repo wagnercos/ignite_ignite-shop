@@ -22,7 +22,9 @@ export function Header() {
       <Dialog.Root>
         <Dialog.Trigger asChild>
           <button onClick={() => {}}>
-            <QuantityMarker>{cartCount}</QuantityMarker>
+            <QuantityMarker cartExist={cartCount > 0 && true}>
+              {cartCount}
+            </QuantityMarker>
             <Handbag size={24} />
           </button>
         </Dialog.Trigger>

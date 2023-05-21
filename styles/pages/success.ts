@@ -37,18 +37,32 @@ export const SuccessContainer = styled('main', {
   },
 })
 
-export const ImageContainer = styled('div', {
+export const ImagesContainer = styled('div', {
+  height: 140,
   width: '100%',
-  maxWidth: 130,
-  height: 145,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: '3rem',
+})
+
+export const ImageContent = styled('div', {
+  width: 140,
+  height: 140,
   background: 'linear-gradient(180deg, #1ea483  0%, #7465d4 100%)',
-  borderRadius: 8,
+  borderRadius: '100%',
   padding: '0.25rem',
-  marginTop: '4rem',
+  boxShadow: '-4px 0 30px rgba(0,0,0, .7)',
 
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+
+  '&:not(:first-child)': {
+    position: 'relative',
+    zIndex: 1,
+    marginLeft: '-45px',
+  },
 
   img: {
     objectFit: 'cover',
