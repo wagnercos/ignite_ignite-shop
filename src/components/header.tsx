@@ -10,26 +10,28 @@ import { HeaderContainer, QuantityMarker } from '../../styles/components/header'
 
 import logoImg from '../assets/logo.svg'
 
-export function Header() {
+export function Header({ isNotPageSuccess }) {
   const { cartCount } = useShoppingCart()
 
   return (
-    <HeaderContainer>
+    <HeaderContainer noCart={!isNotPageSuccess ?? true}>
       <Link href="/">
         <Image src={logoImg} alt="" />
       </Link>
 
-      <Dialog.Root>
-        <Dialog.Trigger asChild>
-          <button onClick={() => {}}>
-            <QuantityMarker cartExist={cartCount > 0 && true}>
-              {cartCount}
-            </QuantityMarker>
-            <Handbag size={24} />
-          </button>
-        </Dialog.Trigger>
-        <Modal />
-      </Dialog.Root>
+      {isNotPageSuccess && (
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <button onClick={() => {}}>
+              <QuantityMarker cartExist={cartCount > 0 && true}>
+                {cartCount}
+              </QuantityMarker>
+              <Handbag size={24} />
+            </button>
+          </Dialog.Trigger>
+          <Modal />
+        </Dialog.Root>
+      )}
     </HeaderContainer>
   )
 }

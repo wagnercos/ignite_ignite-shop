@@ -1,4 +1,5 @@
 import { AppProps } from 'next/app'
+import { useRouter } from 'next/router'
 import { CartProvider } from 'use-shopping-cart'
 
 import { globalStyles } from '../../styles/global'
@@ -8,6 +9,11 @@ import { Header } from '../components/header'
 globalStyles()
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+  const { pathname } = router
+
+  const isNotPageSuccess = pathname === '/' || pathname === '/product/[id]'
+
   return (
     <Container>
       <CartProvider
@@ -16,7 +22,8 @@ export default function App({ Component, pageProps }: AppProps) {
         currency="BRL"
         shouldPersist
       >
-        <Header />
+        {/* {isNotPageSuccess && <Header />} */}
+        <Header isNotPageSuccess={isNotPageSuccess} />
         <Component {...pageProps} />
       </CartProvider>
     </Container>

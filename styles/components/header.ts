@@ -10,6 +10,14 @@ export const HeaderContainer = styled('header', {
   alignItems: 'center',
   justifyContent: 'space-between',
 
+  variants: {
+    noCart: {
+      true: {
+        justifyContent: 'center',
+      },
+    },
+  },
+
   button: {
     all: 'unset',
     color: '$gray300',
