@@ -4,6 +4,7 @@ import Stripe from 'stripe'
 import axios from 'axios'
 import { useState } from 'react'
 import Head from 'next/head'
+import { useShoppingCart } from 'use-shopping-cart'
 
 import { stripe } from '../../services/stripe'
 
@@ -30,11 +31,15 @@ export default function Product({ product }: ProductProps) {
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false)
 
+  const { cartDetails } = useShoppingCart()
+
+  const cartItems = Object.values(cartDetails)
+
   async function handleBuyProduct() {
     try {
       setIsCreatingCheckoutSession(true)
       const response = await axios.post('/api/checkout', {
-        priceId: product.price_id,
+        cartItems,
       })
 
       const { checkoutUrl } = response.data

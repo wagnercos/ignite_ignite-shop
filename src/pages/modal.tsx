@@ -22,22 +22,17 @@ export function Modal() {
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false)
 
-  const { cartDetails, removeItem, cartCount, formattedTotalPrice } =
+  const { cartDetails, cartCount, formattedTotalPrice, removeItem } =
     useShoppingCart()
 
-  const products = Object.values(cartDetails ?? {}).map((entry) => {
-    return {
-      entry,
-      removeItem,
-    }
-  })
+  const cartItems = Object.values(cartDetails)
 
   async function handleBuyProduct() {
     try {
       setIsCreatingCheckoutSession(true)
 
       const response = await axios.post('/api/checkout', {
-        cartItem: products,
+        cartItems,
       })
 
       const { checkoutUrl } = response.data
@@ -48,6 +43,11 @@ export function Modal() {
       alert('Falha ao redirecionar ao checkout')
     }
   }
+
+  const products = cartItems.map((p) => ({
+    ...p,
+    removeItem,
+  }))
 
   return (
     <Dialog.Portal>
@@ -62,27 +62,22 @@ export function Modal() {
         <CartContent>
           {products.map((product) => {
             return (
-              <CartItem key={product.entry.id}>
+              <CartItem key={product.id}>
                 <ImageContainer>
-                  <Image
-                    src={product.entry.image}
-                    alt=""
-                    width={90}
-                    height={90}
-                  />
+                  <Image src={product.image} alt="" width={90} height={90} />
                 </ImageContainer>
                 <DescriptionGroup>
-                  <p>{product.entry.name}</p>
+                  <p>{product.name}</p>
                   <strong>
                     {formatCurrencyString({
-                      value: product.entry.price,
+                      value: product.price,
                       currency: 'BRL',
                       language: 'pt-BR',
                     })}
                   </strong>
                   <button
                     type="button"
-                    onClick={() => product.removeItem(product.entry.id)}
+                    onClick={() => product.removeItem(product.id)}
                   >
                     Remover
                   </button>
